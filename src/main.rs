@@ -27,15 +27,13 @@ fn main() {
 #[cfg(target_arch = "arm")]
 use core::arch::assemble;
 #[cfg(target_arch = "arm")]
-use core::arch::asm;
-#[cfg(target_arch = "arm")]
 fn main() {
     let mut pid = 0;
     let mut rid = 0;
 
     // Get processor ID (PID)
     unsafe {
-        asm!("getreg r0, r2"
+        core::arch::asm!("getreg r0, r2"
              : "={r0}"(pid)
              : "r2"
              :: "volatile");
@@ -44,7 +42,7 @@ fn main() {
 
     // Get processor revision ID (RID)
     unsafe {
-        asm!("getreg r2, r1"
+        core::arch::asm!("getreg r2, r1"
              : "={r2}"(rid)
              : "r1"
              :: "volatile");
