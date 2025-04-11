@@ -1,8 +1,20 @@
 use std::arch::asm;
+use std::env;
 
 #[cfg(any(target_arch="x86", target_arch="x86_64"))]
 fn main() {
     let mut buf = [0_u8; 12];
+    let mut arch = match env::var("TARGET_ARCH") {
+        Ok(arch) => arch,
+        Err(_) => "Not Linux".to_string(),
+    };
+    if arch == "Not Linux" {
+        arch = match env::var("PROCESSOR_ARCHITECTURE") {
+            Ok(arch) => arch,
+            Err(_) => "Unknow Arch".to_string(),
+        };
+    }
+    println!("Arch: {}", arch);
     unsafe {
         asm!(
             "push rbx",
@@ -19,7 +31,6 @@ fn main() {
             out("edx") _,
         );
     }
-
     let cpu_name = core::str::from_utf8(&buf).unwrap();
     println!("CPU Manufacturer ID: {}", cpu_name);
 }
