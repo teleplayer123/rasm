@@ -3,7 +3,7 @@ pub mod x86 {
     use std::env;
 
     pub fn x86_cpuid() -> String{
-            let mut buf = [0_u8; 12];
+        let mut buf = [0_u8; 12];
         let mut arch = match env::var("TARGET_ARCH") {
             Ok(arch) => arch,
             Err(_) => "Not Linux".to_string(),
@@ -33,5 +33,16 @@ pub mod x86 {
         }
         let cpu_name = core::str::from_utf8(&buf).unwrap();
         cpu_name.to_string()
+    }
+
+    pub fn base_addr() -> u32 {
+        let mut addr: u32;
+        unsafe {
+            asm!(
+                "mov eax, dword ptr gs:[30h]",
+                inout("eax") 0 => addr,
+            );
+        }
+        addr
     }
 }
