@@ -1,6 +1,7 @@
 pub mod arm {
     use core::arch::asm;
 
+    // This probably does not work
     pub fn arm_rid() -> u32 {
         let mut rid: u32 = 0;
         unsafe {
